@@ -17,6 +17,7 @@ public class VentanaJuego extends JFrame {
 	MundoJuego miMundo;        // Mundo del juego
 	CocheJuego miCoche;        // Coche del juego
 	MiRunnable miHilo = null;  // Hilo del bucle principal de juego	
+	boolean[] arrayb = new boolean[4];
 
 	/** Constructor de la ventana de juego. Crea y devuelve la ventana inicializada
 	 * sin coches dentro
@@ -52,6 +53,18 @@ public class VentanaJuego extends JFrame {
 				// System.out.println( "Nueva velocidad de coche: " + miCoche.getVelocidad() );
 			}
 		});
+		bAcelerar.addActionListener( new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent pressed) {
+				arrayb[1]=true;
+			}
+		});
+		bAcelerar.addActionListener( new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent released) {
+				arrayb[1]=false;
+			}
+		});
 		bFrenar.addActionListener( new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -59,13 +72,25 @@ public class VentanaJuego extends JFrame {
 				// System.out.println( "Nueva velocidad de coche: " + miCoche.getVelocidad() );
 			}
 		});
-		bGiraIzq.addActionListener( new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				miCoche.gira( +10 );
-				// System.out.println( "Nueva dirección de coche: " + miCoche.getDireccionActual() );
-			}
-		});
+//		bGiraIzq.addActionListener( new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				miCoche.gira( +10 );
+//				// System.out.println( "Nueva dirección de coche: " + miCoche.getDireccionActual() );
+//			}
+//		});
+//		bGiraIzq.addActionListener( new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent pressed) {
+//				arrayb[3]=true;
+//			}
+//		});
+//		bGiraIzq.addActionListener( new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent released) {
+//				arrayb[3]=false;
+//			}
+//		});
 		bGiraDer.addActionListener( new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -80,19 +105,47 @@ public class VentanaJuego extends JFrame {
 			public void keyPressed(KeyEvent e) {
 				switch (e.getKeyCode()) {
 					case KeyEvent.VK_UP: {
-						miCoche.acelera( +5, 1 );
+//						miCoche.acelera( +5, 1 );
+						arrayb[0]=true; //La primera pos. del array representa la aceleración
 						break;
 					}
 					case KeyEvent.VK_DOWN: {
 						miCoche.acelera( -5, 1 );
+						arrayb[1]=true; //La segunda pos. del array representa la frenada
 						break;
 					}
 					case KeyEvent.VK_LEFT: {
-						miCoche.gira( +10 );
+//						miCoche.gira( +10 );
+						arrayb[2]=true; //La tercera pos. del array representa el giro izquierda
 						break;
 					}
 					case KeyEvent.VK_RIGHT: {
-						miCoche.gira( -10 );
+//						miCoche.gira( -10 );
+						arrayb[3]=true; //La cuarta pos. del array representa el giro derecha
+						break;
+					}
+				}
+			}
+			
+			public void keyReleased(KeyEvent e) {
+				switch (e.getKeyCode()) {
+					case KeyEvent.VK_UP: {
+//						miCoche.acelera( +5, 1 );
+						arrayb[0]=false;
+						break;
+					}
+					case KeyEvent.VK_DOWN: {
+//						miCoche.acelera( -5, 1 );
+						arrayb[1]=false;
+						break;
+					}
+					case KeyEvent.VK_LEFT: {
+						arrayb[2]=false;
+						break;
+					}
+					case KeyEvent.VK_RIGHT: {
+//						miCoche.gira( -10 );
+						arrayb[3]=false;
 						break;
 					}
 				}
@@ -152,7 +205,24 @@ public class VentanaJuego extends JFrame {
 			// Bucle principal forever hasta que se pare el juego...
 			while (sigo) {
 				// Mover coche
+				if(arrayb[0]==true)
+				{
+					miCoche.acelera( +5, 1 );
+				}
+				if(arrayb[1]==true)
+				{
+					miCoche.acelera( -5, 1 );
+				}
+				if(arrayb[2]==true)
+				{
+					miCoche.gira( +10 );
+				}
+				if(arrayb[3]==true)
+				{
+					miCoche.gira( -10 );
+				}
 				miCoche.mueve( 0.040 );
+				
 				// Chequear choques
 				// (se comprueba tanto X como Y porque podría a la vez chocar en las dos direcciones (esquinas)
 				if (miMundo.hayChoqueHorizontal(miCoche)) // Espejo horizontal si choca en X
